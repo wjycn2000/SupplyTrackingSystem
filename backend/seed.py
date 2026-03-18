@@ -1,5 +1,5 @@
 import asyncio
-from app.database import async_session
+from app.database import AsyncSessionLocal as async_session
 from app.models import Item, Supplier
 
 suppliers = [
