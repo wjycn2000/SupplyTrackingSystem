@@ -19,7 +19,6 @@ services:
 
   backend:
     build: ./backend
-    command: sh ./entrypoint.sh
     environment:
       DATABASE_URL: postgresql+asyncpg://supply_user:supply_pass@db:5432/supply_tracking
     ports:
@@ -27,8 +26,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    volumes:
-      - ./backend:/app
 
   frontend:
     build: ./frontend
