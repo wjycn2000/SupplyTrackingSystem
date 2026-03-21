@@ -3,32 +3,6 @@ from pydantic import BaseModel
 from typing import Optional
 
 
-# Item schemas
-class ItemBase(BaseModel):
-    name: str
-    description: Optional[str] = None
-    category: Optional[str] = None
-    quantity: int = 0
-    unit: Optional[str] = None
-
-
-class ItemCreate(ItemBase):
-    pass
-
-
-class ItemUpdate(ItemBase):
-    pass
-
-
-class ItemOut(ItemBase):
-    id: int
-    created_at: datetime
-    updated_at: datetime
-
-    class Config:
-        from_attributes = True
-
-
 # Supplier schemas
 class SupplierBase(BaseModel):
     name: str
@@ -55,8 +29,38 @@ class SupplierOut(SupplierBase):
         from_attributes = True
 
 
+# Item schemas
+class ItemBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+    category: Optional[str] = None
+    quantity: int = 0
+    unit: Optional[str] = None
+    supplier_id: Optional[int] = None
+    min_quantity: int = 0
+
+
+class ItemCreate(ItemBase):
+    pass
+
+
+class ItemUpdate(ItemBase):
+    pass
+
+
+class ItemOut(ItemBase):
+    id: int
+    supplier: Optional[SupplierOut] = None
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
 # Dashboard schema
 class DashboardOut(BaseModel):
     total_item_types: int
     total_suppliers: int
     total_quantity: int
+    low_stock_count: int

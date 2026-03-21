@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from typing import List
+from sqlalchemy import select, or_
+from typing import List, Optional
 from app.database import get_db
 from app.models import Item
 from app.schemas import ItemCreate, ItemUpdate, ItemOut
@@ -10,8 +10,21 @@ router = APIRouter(prefix="/api/items", tags=["items"])
 
 
 @router.get("", response_model=List[ItemOut])
-async def list_items(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Item).order_by(Item.id))
+async def list_items(
+    supplier_id: Optional[int] = Query(None),
+    search: Optional[str] = Query(None),
+    category: Optional[str] = Query(None),
+    db: AsyncSession = Depends(get_db),
+):
+    stmt = select(Item).order_by(Item.id)
+    if supplier_id is not None:
+        stmt = stmt.where(Item.supplier_id == supplier_id)
+    if category:
+        stmt = stmt.where(Item.category == category)
+    if search:
+        term = f"%{search}%"
+        stmt = stmt.where(or_(Item.name.ilike(term), Item.description.ilike(term)))
+    result = await db.execute(stmt)
     return result.scalars().all()
 
 

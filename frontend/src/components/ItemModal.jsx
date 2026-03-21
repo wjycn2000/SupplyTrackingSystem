@@ -1,18 +1,30 @@
 import { useState, useEffect } from 'react'
+import api from '../api/client'
 
-const EMPTY = { name: '', description: '', category: '', quantity: 0, unit: '' }
+const EMPTY = { name: '', description: '', category: '', quantity: 0, unit: '', supplier_id: null, min_quantity: 0 }
 
 export default function ItemModal({ item, onSave, onClose }) {
   const [form, setForm] = useState(EMPTY)
+  const [suppliers, setSuppliers] = useState([])
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    setForm(item ? { ...item } : EMPTY)
+    setForm(item ? { ...item, supplier_id: item.supplier_id ?? null } : EMPTY)
   }, [item])
+
+  useEffect(() => {
+    api.get('/api/suppliers').then(r => setSuppliers(r.data)).catch(() => {})
+  }, [])
 
   function handleChange(e) {
     const { name, value } = e.target
-    setForm(f => ({ ...f, [name]: name === 'quantity' ? Number(value) : value }))
+    if (name === 'quantity' || name === 'min_quantity') {
+      setForm(f => ({ ...f, [name]: Number(value) }))
+    } else if (name === 'supplier_id') {
+      setForm(f => ({ ...f, supplier_id: value === '' ? null : Number(value) }))
+    } else {
+      setForm(f => ({ ...f, [name]: value }))
+    }
   }
 
   function handleSubmit(e) {
@@ -44,8 +56,21 @@ export default function ItemModal({ item, onSave, onClose }) {
             <input type="number" name="quantity" value={form.quantity} onChange={handleChange} min="0" />
           </div>
           <div className="form-group">
+            <label>Min Quantity (low stock threshold)</label>
+            <input type="number" name="min_quantity" value={form.min_quantity} onChange={handleChange} min="0" />
+          </div>
+          <div className="form-group">
             <label>Unit</label>
             <input name="unit" value={form.unit || ''} onChange={handleChange} placeholder="e.g. pcs, kg, litre" />
+          </div>
+          <div className="form-group">
+            <label>Supplier</label>
+            <select name="supplier_id" value={form.supplier_id ?? ''} onChange={handleChange}>
+              <option value="">— None —</option>
+              {suppliers.map(s => (
+                <option key={s.id} value={s.id}>{s.name}</option>
+              ))}
+            </select>
           </div>
           <div className="form-actions">
             <button type="button" className="btn btn-secondary" onClick={onClose}>Cancel</button>
