@@ -84,6 +84,7 @@ main {
 .card.green { border-left-color: #22c55e; }
 .card.purple { border-left-color: #a855f7; }
 .card.blue { border-left-color: #3b82f6; }
+.card.orange { border-left-color: #f97316; }
 
 .card-label {
   font-size: 0.8rem;
@@ -238,6 +239,72 @@ tbody tr:hover td {
   justify-content: flex-end;
   gap: 0.75rem;
   margin-top: 1.5rem;
+}
+
+/* Filters bar */
+.filters {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.filter-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #1e293b;
+  background: #fff;
+  transition: border-color 0.15s;
+}
+
+.filter-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+}
+
+.filter-select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #1e293b;
+  background: #fff;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+}
+
+/* Low stock row highlight */
+tr.row-low-stock td {
+  background: #fff7ed;
+}
+
+tbody tr.row-low-stock:hover td {
+  background: #ffedd5;
+}
+
+.low-stock-badge {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.1rem 0.45rem;
+  background: #f97316;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
 }
 
 /* Status / empty */

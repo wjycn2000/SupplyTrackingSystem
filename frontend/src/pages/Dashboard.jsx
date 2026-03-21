@@ -34,6 +34,10 @@ export default function Dashboard() {
           <div className="card-label">Total Quantity in Stock</div>
           <div className="card-value">{stats.total_quantity}</div>
         </div>
+        <div className="card orange">
+          <div className="card-label">Low Stock Items</div>
+          <div className="card-value">{stats.low_stock_count}</div>
+        </div>
       </div>
     </>
   )
